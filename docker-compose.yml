@@ -1,0 +1,36 @@
+version: '3.7'
+services:
+  api:
+    container_name: api2
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 3001:3001
+    depends_on:
+      - postgres
+    env_file:
+      - .env
+    volumes:
+      - /usr/src/app/node_modules
+      - .:/usr/src/app
+
+  postgres:
+    image: postgres:15.3
+    container_name: postgres2
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+
+    ports:
+      - 5431:5431
+    env_file:
+      - .env
+    volumes:
+      - ./volume/psql:/var/lib/postgresql/data
+
+volumes:
+  postgres:
+    name: oydee-db
